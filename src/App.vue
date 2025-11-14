@@ -2,13 +2,18 @@
 <template>
   <div class="page">
     <div class="header">
-    <div :style="name === 'todo' ? {background:'red'} :{background:'lightgray'}"  @click="clickTab('todo')" class="tab">Todo</div>
+<!--    <div :style="name === 'todo' ? {background:'red'} :{background:'lightgray'}"  @click="clickTab('todo')" class="tab">Todo</div>-->
 
-    <div :style="name === 'basic' ? {background:'red'} :{background:'lightgray'}"  @click="clickTab('basic')" class="tab">Basic</div>
+<!--    <div :style="name === 'basic' ? {background:'red'} :{background:'lightgray'}"  @click="clickTab('basic')" class="tab">Basic</div>-->
+      <router-link v-for="route in routes" :to="route.path" :key="route.name"
+                   :style="route.name === activeRoute.name ? {background:'red'} :{background:'lightgray'}"
+                   class="tab"
+      >{{route.name }}</router-link>
     </div>
     <div class="content">
-      <TodoList v-if="name ==='todo'"/>
-      <Basic v-if="name==='basic'"/>
+      <RouterView/>
+<!--      <TodoList v-if="name ==='todo'"/>-->
+<!--      <Basic v-if="name==='basic'"/>-->
     </div>
   </div>
 </template>
@@ -16,11 +21,16 @@
 <script setup>
 import TodoList from "@/components/TodoList.vue";
 import Basic from "@/components/Basic.vue";
-import { createApp, ref } from 'vue'
+import {  ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const app = createApp()
+const activeRoute = useRoute()
+const router = useRouter()
+const routes = router.getRoutes()
 
-app.mount('#app')
+
+console.log(routes)
+
 const  name = ref('todo')
 const clickTab = (str) =>{
    name.value = str
@@ -48,6 +58,7 @@ const clickTab = (str) =>{
   display: flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
 }
 .content {
   flex: 1;
